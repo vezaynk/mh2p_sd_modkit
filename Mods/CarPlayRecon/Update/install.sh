@@ -10,6 +10,14 @@ echo "--- processes"
 pidin -f an 2>/dev/null | grep -i -e carplay -e airplay -e cp_ -e iap -e smartphone > "$OUT/processes.txt"
 cat "$OUT/processes.txt"
 
+# Java HMI (lsd.jar) is zip-compressed, so grep cannot see strings inside it.
+# Copy it explicitly; the fullscreen mod shadows classes from it via jars/fc.jar.
+echo "--- copying Java HMI"
+mkdir -p "$OUT/files/mnt/app/eso/hmi/lsd"
+cp -f /mnt/app/eso/hmi/lsd/lsd.jar "$OUT/files/mnt/app/eso/hmi/lsd/" && echo "copied lsd.jar"
+cp -rf /mnt/app/eso/hmi/lsd/jars "$OUT/files/mnt/app/eso/hmi/lsd/" 2>/dev/null
+ls -l /mnt/app/eso/hmi/lsd > "$OUT/lsd_dir.txt" 2>&1
+
 for root in /mnt/app /mnt/system /mnt/persist /mnt/persist_new /mnt/ota /etc; do
     [[ -d "$root" ]] || continue
     echo "--- scanning $root"
