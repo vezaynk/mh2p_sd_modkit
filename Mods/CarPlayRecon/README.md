@@ -1,9 +1,12 @@
-# CarPlayRecon (read-only)
-Locates the files on the PCM that declare CarPlay limited-UI elements
-(`limitedUIElements`, `softKeyboard`, `nonMusicLists`, `limitedUI`) and copies
-them to `/Logs/CarPlayRecon/files/` on the SD card. Nothing on the unit is modified.
-Delete this folder from `Mods/` after one run.
+# CarPlayRecon (read-only, one pass)
+Collects everything needed to build a CarPlay soft-keyboard (limited-UI) patch.
+Nothing on the unit is modified; there is nothing to uninstall.
 
-Also copies `/mnt/app/eso/hmi/lsd/lsd.jar` and `jars/` (the Java HMI). Grep cannot see
-strings inside compressed jars; decompile `lsd.jar` offline (e.g. Recaf/CFR) and search
-the `de.audi.app.terminalmode` packages.
+Output in `/Logs/CarPlayRecon/` on the SD card:
+- `jars/` - every `.jar` under `/mnt/app` (Java HMI, incl. `lsd.jar`; compressed, so not greppable)
+- `hits.txt`, `files/` - native files containing `limitedUI` / `softKeyboard` / `nonMusicLists`
+- `mount.txt`, `df.txt`, `pidin.txt`, `ls_eso.txt`, `env.txt` - system context
+- `/Logs/CarPlayRecon.log` - run log; must end with `CarPlayRecon COMPLETE`
+
+The scan can take a while; let the update finish. Needs a few hundred MB free on the card.
+Remove `Mods/CarPlayRecon` from the card after the run.
