@@ -23,8 +23,10 @@ for root in /mnt/app /mnt/system /mnt/persist /mnt/persist_new /mnt/ota /etc; do
     echo "--- scanning $root"
     find "$root" -type f 2>/dev/null | while read -r f; do
         if grep -l -e limitedUIElements -e softKeyboard -e nonMusicLists -e limitedUI "$f" >/dev/null 2>&1; then
-            sz=$(ls -l "$f" | awk '{print $5}')
-            echo "HIT $sz $f" | tee -a "$OUT/hits.txt"
+            sz=0
+            ls -l "$f" | read perms links owner group sz rest
+            echo "HIT $sz $f"
+            echo "HIT $sz $f" >> "$OUT/hits.txt"
             # copy hits (cap 40 MB each) preserving path
             if [[ "$sz" -lt 41943040 ]]; then
                 mkdir -p "$OUT/files$(dirname "$f")"
